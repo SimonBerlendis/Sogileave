@@ -36,10 +36,11 @@ jobs:
           name: test-results
           path: build/reports/tests/
           
-  build:
-    name: Build Application
+  build-and-deploy:
+    name: Build and Deploy Application
     needs: test
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout code
@@ -58,47 +59,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
         
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: sogileave-jar
-          path: build/libs/*.jar
-          
-  deploy:
-    name: Deploy to GitHub
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: sogileave-jar
-          
-      - name: Set up GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
-          
-      - name: Create GitHub Release
-        run: |
-          gh release create v${{ github.run_number }} \
-            --title "Release v${{ github.run_number }}" \
-            --notes "Automated release from GitHub Actions" \
-            Sogileave-*.jar
-        env:
-          GH_TOKEN: ${{ github.token }}
-          
       - name: Prepare Application Deployment
         run: |
           # Create a deployment package with the application and startup scripts
           mkdir -p deployment
           cp build/libs/*.jar deployment/
-          cp build/install/Sogileave/bin/* deployment/ || echo "No bin scripts found"
           
           # Create a simple startup script
           cat > deployment/start.sh << 'EOF'
@@ -132,16 +97,14 @@ jobs:
           # Zip the deployment package
           zip -r sogileave-deployment.zip deployment/
           
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sogileave-jar
+          path: build/libs/*.jar
+          
       - name: Upload Deployment Package
         uses: actions/upload-artifact@v4
         with:
           name: sogileave-deployment
           path: sogileave-deployment.zip
-          
-      - name: Verify deployment
-        run: |
-          echo "Verifying GitHub Release..."
-          gh release view v${{ github.run_number }}
-          echo "Deployment verification complete!"
-        env:
-          GH_TOKEN: ${{ github.token }}
