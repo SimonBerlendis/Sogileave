@@ -31,4 +31,17 @@ class ApplicationTest {
 
         assertEquals(ContentType.Text.Html.withCharset(Charsets.UTF_8), response.contentType())
     }
+
+    @Test
+    fun testHealthEndpoint() = testApplication {
+        application {
+            module()
+        }
+
+        val response = client.get("/health")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals(ContentType.Text.Plain.withCharset(Charsets.UTF_8), response.contentType())
+        assertEquals("OK", response.bodyAsText())
+    }
 }
