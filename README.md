@@ -23,7 +23,10 @@ This project uses GitHub Actions for continuous integration and deployment:
 
 1. **Test Stage**: Runs all tests with Java 25
 2. **Build Stage**: Creates deployable JAR artifacts
-3. **Deploy Stage**: Publishes releases to GitHub Releases
+3. **Deploy Stage**: 
+   - Publishes releases to GitHub Releases
+   - Creates complete deployment packages with startup scripts
+   - Uploads deployment-ready artifacts
 
 ## Getting Started
 
@@ -48,6 +51,29 @@ This project uses GitHub Actions for continuous integration and deployment:
 ```bash
 ./gradlew build
 ```
+
+### Deployment
+
+The CI/CD pipeline creates a complete deployment package that includes:
+- Executable JAR file
+- Startup scripts
+- Deployment documentation
+
+To deploy from the CI/CD artifacts:
+1. Download the `sogileave-deployment` artifact from GitHub Actions
+2. Unzip the package
+3. Run `./start.sh`
+
+## Deployment Options
+
+### Running with Custom Port
+```bash
+java -Dio.ktor.deployment.port=8080 -jar sogileave-*.jar
+```
+
+### Environment Variables
+- `PORT`: Set the server port (default: 8080)
+- `KTOR_ENV`: Set to "development" for development mode
 
 ## Development
 
