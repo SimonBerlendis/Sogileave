@@ -110,3 +110,5 @@ jobs:
           echo "Verifying GitHub Release..."
           gh release view v${{ github.run_number }}
           echo "Deployment verification complete!"
+        env:
+          GH_TOKEN: ${{ github.token }}
