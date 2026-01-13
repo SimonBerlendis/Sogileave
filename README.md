@@ -6,7 +6,6 @@ Planbot paid leave
 ## CI/CD Status
 
 - **Build Status**: ![Build Status](https://img.shields.io/github/actions/workflow/status/sberlendis/Sogileave/ci-cd.yml?branch=main&label=Build)
-- **Test Coverage**: ![Test Coverage](https://img.shields.io/badge/coverage-80%25-yellow)
 - **Java Version**: ![Java 25](https://img.shields.io/badge/Java-25-blue)
 - **Kotlin Version**: ![Kotlin 2.3.0](https://img.shields.io/badge/Kotlin-2.3.0-purple)
 

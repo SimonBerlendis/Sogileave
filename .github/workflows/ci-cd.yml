@@ -93,16 +93,50 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           
-      - name: Deploy to GitHub Pages
+      - name: Prepare Application Deployment
         run: |
-          ./gradlew dokkaHtml
-          mkdir -p docs
-          cp -r build/dokka/html/* docs/
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add docs
-          git commit -m "Update documentation [skip ci]"
-          git push
+          # Create a deployment package with the application and startup scripts
+          mkdir -p deployment
+          cp build/libs/*.jar deployment/
+          cp build/install/Sogileave/bin/* deployment/ || echo "No bin scripts found"
+          
+          # Create a simple startup script
+          cat > deployment/start.sh << 'EOF'
+          #!/bin/bash
+          java -jar sogileave-*.jar
+          EOF
+          chmod +x deployment/start.sh
+          
+          # Create a README for deployment
+          cat > deployment/README.md << 'EOF'
+          # Sogileave Application Deployment
+          
+          ## Running the Application
+          
+          ```bash
+          ./start.sh
+          ```
+          
+          ## Running with Custom Port
+          
+          ```bash
+          java -Dio.ktor.deployment.port=8080 -jar sogileave-*.jar
+          ```
+          
+          ## Environment Variables
+          
+          - `PORT`: Set the server port (default: 8080)
+          - `KTOR_ENV`: Set to "development" for development mode
+          EOF
+          
+          # Zip the deployment package
+          zip -r sogileave-deployment.zip deployment/
+          
+      - name: Upload Deployment Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: sogileave-deployment
+          path: sogileave-deployment.zip
           
       - name: Verify deployment
         run: |
