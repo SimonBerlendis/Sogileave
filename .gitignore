@@ -42,3 +42,6 @@ logs/
 
 # Claude
 .claude/
+
+# Mistral
+.mistral/
