@@ -23,9 +23,6 @@ WORKDIR /home/appuser
 # Copy the built JAR from builder stage
 COPY --from=builder /app/build/libs/*.jar /home/appuser/app.jar
 
-# Copy render.yaml for Render detection
-COPY render.yaml .
-
 # Set environment variables
 ENV PORT=8080
 ENV KTOR_ENV=production

@@ -3,11 +3,13 @@ Planbot paid leave
 
 [![CI/CD Pipeline](https://github.com/sberlendis/Sogileave/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/sberlendis/Sogileave/actions/workflows/ci-cd.yml)
 
-## CI/CD Status
+## Status
 
 - **Build Status**: ![Build Status](https://img.shields.io/github/actions/workflow/status/sberlendis/Sogileave/ci-cd.yml?branch=main&label=Build)
 - **Java Version**: ![Java 25](https://img.shields.io/badge/Java-25-blue)
 - **Kotlin Version**: ![Kotlin 2.3.0](https://img.shields.io/badge/Kotlin-2.3.0-purple)
+- **Deployment**: ![Render](https://img.shields.io/badge/Deployment-Render-blue)
+- **Docker**: ![Docker](https://img.shields.io/badge/Docker-Enabled-blue)
 
 ## About
 
@@ -16,17 +18,6 @@ Sogileave is a Planbot paid leave management system built with:
 - **Ktor 3.3.3**
 - **Gradle 9.1.0**
 - **Java 25**
-
-## CI/CD Pipeline
-
-This project uses GitHub Actions for continuous integration and deployment:
-
-1. **Test Stage**: Runs all tests with Java 25
-2. **Build-and-Deploy Stage**: 
-   - Builds the Ktor application
-   - Creates deployment packages
-   - Deploys website to GitHub Pages
-   - Uploads all artifacts
 
 ## Getting Started
 
@@ -52,37 +43,43 @@ This project uses GitHub Actions for continuous integration and deployment:
 ./gradlew build
 ```
 
-### Deployment
+## CI/CD Pipeline
 
-The CI/CD pipeline provides multiple deployment options:
+This project uses GitHub Actions for continuous integration with automatic Docker deployment to Render:
 
-### 1. GitHub Pages Website 🌐
-- Automatically deploys a frontend website to GitHub Pages
-- Shows API status and documentation
-- Accessible at: `https://<username>.github.io/Sogileave/`
-- Includes responsive design and API monitoring
+### Pipeline Stages:
 
-### 2. Application Deployment Package 📦
-The CI/CD pipeline creates a complete deployment package that includes:
-- Executable JAR file
-- Startup scripts
-- Deployment documentation
+1. **Test Stage** (Runs on every push/PR to main):
+   - Sets up Java 25 environment
+   - Runs comprehensive test suite
+   - Uploads test results as artifacts
+   - Fails fast if tests don't pass
 
-To deploy the backend application:
-1. Download the `sogileave-deployment` artifact from GitHub Actions
-2. Unzip the package
-3. Run `./start.sh`
+### 🐳 Docker Deployment on Render
 
-## Deployment Options
+- **Production URL**: [https://sogileave.onrender.com](https://sogileave.onrender.com)
+- **Status**: ![Render Status](https://img.shields.io/website?url=https://sogileave.onrender.com)
+- **Auto-Deploy**: Enabled on main branch pushes
+- **Automatic Trigger**: Push to main branch
+- **Render Integration**: Render detects changes and builds Docker image
+- **Docker Deployment**: Container deploys with health check verification
+- **Zero Downtime**: Render handles rolling deployments
 
-### Running with Custom Port
-```bash
-java -Dio.ktor.deployment.port=8080 -jar sogileave-*.jar
-```
+## Configuration
 
 ### Environment Variables
 - `PORT`: Set the server port (default: 8080)
-- `KTOR_ENV`: Set to "development" for development mode
+- `KTOR_ENV`: Set to "production" for production mode
+- `JAVA_OPTS`: JVM optimization options (set in Dockerfile)
+
+## Project Structure
+
+```
+.
+├── Dockerfile                  # Docker configuration
+├── .github/workflows/ci-cd.yml  # CI/CD pipeline
+└── src/                        # Application source code
+```
 
 ## Development
 
