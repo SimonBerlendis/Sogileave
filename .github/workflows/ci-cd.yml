@@ -69,9 +69,6 @@ jobs:
           
       - name: Prepare for Render Deployment
         run: |
-          # Copy render.yaml to the root for Render detection
-          cp render.yaml .
-          
           # Create a Render-specific deployment info file
           cat > RENDER_DEPLOYMENT_INFO.md << 'EOF'
           # Render Deployment Information
