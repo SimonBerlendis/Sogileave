@@ -35,35 +35,3 @@ jobs:
         with:
           name: test-results
           path: build/reports/tests/
-          
-  build-and-deploy:
-    name: Build and Deploy Application
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Set up JDK 25
-        uses: actions/setup-java@v4
-        with:
-          java-version: '25'
-          distribution: 'temurin'
-          cache: 'gradle'
-          
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-        
-      - name: Build with Gradle
-        run: ./gradlew build
-        
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: sogileave-jar
-          path: build/libs/*.jar
-          
-
-          
