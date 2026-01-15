@@ -37,9 +37,9 @@ Sogileave is a Planbot paid leave management system built with:
 
 ```
 .
-├── Dockerfile                  # Docker configuration
+├── Dockerfile                   # Docker configuration
 ├── .github/workflows/ci-cd.yml  # CI/CD pipeline
-└── src/                        # Application source code
+└── src/                         # Application source code
 ```
 
 ## CI/CD Pipeline
